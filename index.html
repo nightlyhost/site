@@ -138,6 +138,22 @@
   .join .btn:hover, .join .btn:focus-visible { background: var(--paper); }
   .join code { font-family: "JetBrains Mono", monospace; font-size: 15px; }
 
+  .beta { display: grid; gap: 14px; max-width: 560px; margin-top: 8px; }
+  .beta .row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .beta .field { display: grid; gap: 6px; }
+  .beta label { font-size: 13px; letter-spacing: .04em; text-transform: uppercase; color: color-mix(in srgb, var(--paper) 70%, transparent); }
+  .beta input {
+    font: inherit; font-size: 16px; color: var(--paper); background: color-mix(in srgb, var(--paper) 8%, transparent);
+    border: 1px solid color-mix(in srgb, var(--paper) 28%, transparent); border-radius: 4px; padding: 10px 12px; width: 100%;
+  }
+  .beta input::placeholder { color: color-mix(in srgb, var(--paper) 40%, transparent); }
+  .beta input:focus-visible { outline: none; border-color: var(--amber); box-shadow: 0 0 0 3px color-mix(in srgb, var(--amber) 35%, transparent); }
+  .beta .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; margin-top: 4px; }
+  .beta .btn { border: 0; cursor: pointer; font: inherit; font-weight: 600; }
+  .beta .alt { font-size: 14px; color: color-mix(in srgb, var(--paper) 70%, transparent); }
+  .beta .thanks { margin: 0; color: var(--amber); font-weight: 500; }
+  @media (max-width: 520px) { .beta .row { grid-template-columns: 1fr; } }
+
   footer { padding-top: 32px; border-top: 1px solid var(--rule); color: var(--ink-2); font-size: 14px; display: flex; flex-wrap: wrap; gap: 8px 28px; justify-content: space-between; }
 
   @media (max-width: 820px) {
@@ -172,7 +188,7 @@
     <h1>Your listing, run by agents that <em>ask first.</em></h1>
     <p class="lede">Nightly works inside your own Airbnb account. It drafts guest replies, prices your nights, and lines up the turnover — and every message, price change, and calendar edit goes through rules you wrote, with a log you can read.</p>
     <div class="cta">
-      <a class="btn" href="mailto:hello@nightlyhost.com?subject=Nightly%20private%20beta&body=Listing%20link%3A%20%0AHow%20many%20homes%3A%20%0AWhat%20you%20use%20today%20(Hospitable%2C%20PriceLabs%2C%20nothing)%3A%20">Join the private beta</a>
+      <a class="btn" href="#join">Join the private beta</a>
       <small>Free during beta · no API keys, no password stored</small>
     </div>
   </div>
@@ -264,8 +280,20 @@
   <div class="join">
     <h2>Private beta, 2027 — twenty to thirty hosts</h2>
     <p>Free, hands-on onboarding, a weekly call, and a say in what gets built next. Best fit: you self-manage one to a few homes, you've been burned by an AI reply you didn't see, or you're paying for two tools that don't talk to each other.</p>
-    <p><a class="btn" href="mailto:hello@nightlyhost.com?subject=Nightly%20private%20beta">Email hello@nightlyhost.com</a></p>
-    <p>Include your listing link, how many homes, and what you use today.</p>
+    <form id="beta-form" class="beta" action="https://docs.google.com/forms/d/e/1FAIpQLSfecxg0gJbbVu3JT1WYbArCMFqh5QKC6i2pSiRVxJL3vUNWgg/formResponse" method="POST" target="beta-sink">
+      <div class="field"><label for="f-email">Email</label><input id="f-email" name="entry.427826923" type="email" required autocomplete="email" placeholder="you@example.com"></div>
+      <div class="field"><label for="f-listing">Listing link</label><input id="f-listing" name="entry.828368156" type="url" inputmode="url" placeholder="https://airbnb.com/rooms/…"></div>
+      <div class="row">
+        <div class="field"><label for="f-homes">How many homes</label><input id="f-homes" name="entry.768692223" type="text" inputmode="numeric" placeholder="1"></div>
+        <div class="field"><label for="f-tools">What you use today</label><input id="f-tools" name="entry.1586031341" type="text" placeholder="Hospitable, PriceLabs, nothing…"></div>
+      </div>
+      <div class="actions">
+        <button class="btn" type="submit" id="beta-submit">Request an invite</button>
+        <span class="alt">or email <a href="mailto:hello@nightlyhost.com">hello@nightlyhost.com</a></span>
+      </div>
+      <p class="thanks" id="beta-thanks" hidden>Got it — we'll reply from hello@nightlyhost.com within a few days.</p>
+    </form>
+    <iframe name="beta-sink" id="beta-sink" hidden aria-hidden="true" tabindex="-1"></iframe>
   </div>
 </section>
 
@@ -275,5 +303,24 @@
 </footer>
 
 </div>
+
+<script>
+  // Meta Pixel: paste the Pixel ID here to enable. Fires PageView on load and Lead on form submit.
+  var META_PIXEL_ID = "";
+  if (META_PIXEL_ID) {
+    !function(f,b,e,v,n,t,s){if(f.fbq)return;n=f.fbq=function(){n.callMethod?n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';n.queue=[];t=b.createElement(e);t.async=!0;t.src=v;
+    s=b.getElementsByTagName(e)[0];s.parentNode.insertBefore(t,s)}(window,document,'script','https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', META_PIXEL_ID); fbq('track', 'PageView');
+  }
+  (function () {
+    var form = document.getElementById('beta-form'), btn = document.getElementById('beta-submit'), thanks = document.getElementById('beta-thanks');
+    form.addEventListener('submit', function () {
+      btn.disabled = true; btn.textContent = 'Sending…';
+      if (window.fbq) fbq('track', 'Lead', { content_name: 'nightly-private-beta' });
+      setTimeout(function () { form.reset(); btn.textContent = 'Requested'; thanks.hidden = false; }, 900);
+    });
+  })();
+</script>
 </body>
 </html>
