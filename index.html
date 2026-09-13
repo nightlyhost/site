@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Nightly</title>
+<meta name="description" content="Nightly runs on your own Airbnb account. It drafts guest replies, prices your nights, and schedules the turnover — and nothing goes out without your rules saying yes.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --paper: #f4f5f1;
+    --paper-2: #eaece6;
+    --ink: #151c2e;
+    --ink-2: #4a5263;
+    --rule: #cfd3c9;
+    --amber: #d99a1e;
+    --amber-ink: #8a5f06;
+    --ok: #2f7d4f;
+    --hold: #b3661a;
+    --block: #a83a32;
+    --mono-bg: #1b2236;
+    --mono-fg: #e6e9f0;
+    --mono-dim: #8b93a7;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #12172a; --paper-2: #1a2036; --ink: #eef0f4; --ink-2: #a9b0c1; --rule: #2b334a;
+      --amber: #e5ab34; --amber-ink: #f0c15c; --ok: #6cc08b; --hold: #e39a4f; --block: #e07068;
+      --mono-bg: #0b0f1c; --mono-fg: #e6e9f0; --mono-dim: #7d859a; color-scheme: dark;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #12172a; --paper-2: #1a2036; --ink: #eef0f4; --ink-2: #a9b0c1; --rule: #2b334a;
+    --amber: #e5ab34; --amber-ink: #f0c15c; --ok: #6cc08b; --hold: #e39a4f; --block: #e07068;
+    --mono-bg: #0b0f1c; --mono-fg: #e6e9f0; --mono-dim: #7d859a; color-scheme: dark;
+  }
+
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font-family: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 17px; line-height: 1.55;
+    padding-inline: clamp(16px, 5vw, 48px); padding-block: 0 64px;
+  }
+  a { color: inherit; }
+  .wrap { max-width: 1080px; margin-inline: auto; }
+
+  header.top {
+    display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
+    padding-block: 22px 0; border-bottom: 1px solid var(--rule);
+  }
+  .brand { font-family: "Instrument Serif", Georgia, serif; font-size: 28px; letter-spacing: -0.01em; text-decoration: none; }
+  .brand i { color: var(--amber); font-style: normal; }
+  .top nav { display: flex; gap: 22px; font-size: 15px; color: var(--ink-2); }
+  .top nav a { text-decoration: none; }
+  .top nav a:hover, .top nav a:focus-visible { color: var(--ink); text-decoration: underline; text-underline-offset: 4px; }
+
+  .hero {
+    display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); gap: 48px;
+    align-items: start; padding-block: 64px 56px;
+  }
+  .eyebrow { font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--amber-ink); font-weight: 600; margin: 0 0 18px; }
+  h1 {
+    font-family: "Instrument Serif", Georgia, serif; font-weight: 400;
+    font-size: clamp(40px, 5.6vw, 66px); line-height: 1.02; letter-spacing: -0.015em;
+    margin: 0 0 22px; text-wrap: balance;
+  }
+  h1 em { font-style: italic; color: var(--amber-ink); }
+  .lede { font-size: 19px; color: var(--ink-2); max-width: 34em; margin: 0 0 30px; text-wrap: pretty; }
+  .cta { display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: center; }
+  .btn {
+    display: inline-block; background: var(--ink); color: var(--paper); text-decoration: none;
+    padding: 12px 20px; border-radius: 4px; font-weight: 600; font-size: 16px;
+  }
+  .btn:hover, .btn:focus-visible { background: var(--amber); color: #151c2e; outline: none; }
+  .btn:focus-visible { box-shadow: 0 0 0 3px var(--paper), 0 0 0 5px var(--amber); }
+  .cta small { color: var(--ink-2); font-size: 14px; }
+
+  /* the audit ledger — this is the product */
+  .ledger {
+    background: var(--mono-bg); color: var(--mono-fg); border-radius: 6px;
+    font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size: 13px; line-height: 1.5; padding: 18px 20px 20px; overflow-x: auto;
+    box-shadow: 0 24px 60px -30px rgba(0,0,0,.45);
+  }
+  .ledger .t { color: var(--mono-dim); display: flex; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+  .ledger table { border-collapse: collapse; width: 100%; min-width: 440px; font-variant-numeric: tabular-nums; }
+  .ledger td { padding: 5px 10px 5px 0; vertical-align: top; white-space: nowrap; border-top: 1px dashed rgba(255,255,255,.08); }
+  .ledger tr:first-child td { border-top: 0; }
+  .ledger td:first-child { color: var(--mono-dim); }
+  .ledger td.msg { white-space: normal; min-width: 200px; }
+  .ledger td:last-child { white-space: normal; color: var(--mono-dim); font-size: 12px; min-width: 120px; padding-right: 0; }
+  .pill { display: inline-block; padding: 1px 7px; border-radius: 3px; font-weight: 500; font-size: 12px; }
+  .pill.ok { background: rgba(108,192,139,.16); color: #8fd8a8; }
+  .pill.hold { background: rgba(227,154,79,.16); color: #f0b46e; }
+  .pill.block { background: rgba(224,112,104,.16); color: #f19a94; }
+  .ledger .foot { margin-top: 12px; color: var(--mono-dim); }
+  .ledger .foot b { color: var(--mono-fg); font-weight: 500; }
+
+  section { padding-block: 48px; border-top: 1px solid var(--rule); }
+  h2 {
+    font-family: "Instrument Serif", Georgia, serif; font-weight: 400;
+    font-size: clamp(28px, 3.4vw, 38px); line-height: 1.1; letter-spacing: -0.01em; margin: 0 0 12px; text-wrap: balance;
+  }
+  .sub { color: var(--ink-2); max-width: 38em; margin: 0 0 32px; }
+  p { max-width: 62ch; }
+
+  .steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
+  .step { border-top: 2px solid var(--ink); padding-top: 14px; }
+  .step .n { font-family: "JetBrains Mono", monospace; font-size: 12px; color: var(--amber-ink); letter-spacing: .08em; }
+  .step h3 { font-size: 20px; margin: 6px 0 8px; font-weight: 600; }
+  .step p { margin: 0; color: var(--ink-2); font-size: 16px; }
+
+  .replace { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
+  .job { background: var(--paper-2); border-radius: 6px; padding: 22px 24px; }
+  .job h3 { margin: 0 0 6px; font-size: 20px; font-weight: 600; }
+  .job .today { font-size: 14px; color: var(--ink-2); margin: 0 0 14px; }
+  .job ul { margin: 0; padding-left: 18px; color: var(--ink-2); font-size: 16px; }
+  .job li { margin: 4px 0; }
+  .job li b { color: var(--ink); font-weight: 600; }
+
+  pre.policy {
+    background: var(--mono-bg); color: var(--mono-fg); border-radius: 6px; padding: 18px 20px; margin: 0;
+    font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 13px; line-height: 1.55; overflow-x: auto;
+  }
+  pre.policy .c { color: var(--mono-dim); }
+  pre.policy .k { color: #9ec5ff; }
+  pre.policy .v { color: #f0c15c; }
+  .split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; align-items: start; }
+
+  .join { background: var(--ink); color: var(--paper); border-radius: 8px; padding: 40px clamp(20px, 4vw, 48px); }
+  .join h2 { color: inherit; }
+  .join p { color: color-mix(in srgb, var(--paper) 78%, transparent); }
+  .join .btn { background: var(--amber); color: #151c2e; }
+  .join .btn:hover, .join .btn:focus-visible { background: var(--paper); }
+  .join code { font-family: "JetBrains Mono", monospace; font-size: 15px; }
+
+  footer { padding-top: 32px; border-top: 1px solid var(--rule); color: var(--ink-2); font-size: 14px; display: flex; flex-wrap: wrap; gap: 8px 28px; justify-content: space-between; }
+
+  @media (max-width: 820px) {
+    .hero, .replace, .split { grid-template-columns: 1fr; }
+    .steps { grid-template-columns: 1fr; gap: 20px; }
+    .hero { padding-block: 40px 40px; gap: 32px; }
+    .top nav { gap: 14px; }
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .ledger tr { animation: rise .5s ease both; }
+    .ledger tr:nth-child(2) { animation-delay: .08s } .ledger tr:nth-child(3) { animation-delay: .16s }
+    .ledger tr:nth-child(4) { animation-delay: .24s } .ledger tr:nth-child(5) { animation-delay: .32s }
+    @keyframes rise { from { opacity: .35; transform: translateY(3px) } to { opacity: 1; transform: none } }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <a class="brand" href="/">Nightly<i>.</i></a>
+  <nav aria-label="Sections">
+    <a href="#how">How it works</a>
+    <a href="#replaces">What it replaces</a>
+    <a href="#join">Private beta</a>
+  </nav>
+</header>
+
+<div class="hero">
+  <div>
+    <p class="eyebrow">For Airbnb hosts with 1–30 homes</p>
+    <h1>Your listing, run by agents that <em>ask first.</em></h1>
+    <p class="lede">Nightly works inside your own Airbnb account. It drafts guest replies, prices your nights, and lines up the turnover — and every message, price change, and calendar edit goes through rules you wrote, with a log you can read.</p>
+    <div class="cta">
+      <a class="btn" href="mailto:hello@nightlyhost.com?subject=Nightly%20private%20beta&body=Listing%20link%3A%20%0AHow%20many%20homes%3A%20%0AWhat%20you%20use%20today%20(Hospitable%2C%20PriceLabs%2C%20nothing)%3A%20">Join the private beta</a>
+      <small>Free during beta · no API keys, no password stored</small>
+    </div>
+  </div>
+
+  <div class="ledger" aria-label="Example audit log">
+    <div class="t"><span>~/.nightly/audit.db</span><span>encino · last 24h</span></div>
+    <table>
+      <tr><td>07:42</td><td class="msg">Guest asked for Wi-Fi password</td><td><span class="pill ok">auto-sent</span></td><td>faq-auto · 0.96</td></tr>
+      <tr><td>09:15</td><td class="msg">Guest asked about early check-in</td><td><span class="pill hold">waiting for you</span></td><td>default</td></tr>
+      <tr><td>11:03</td><td class="msg">Oct 3–5 gap night: $189 → $159</td><td><span class="pill hold">waiting for you</span></td><td>calendar-needs-eyes</td></tr>
+      <tr><td>13:27</td><td class="msg">Guest asked for a partial refund</td><td><span class="pill block">blocked</span></td><td>never-touch-money</td></tr>
+      <tr><td>16:00</td><td class="msg">Check-out eve reminder to Priya M.</td><td><span class="pill ok">auto-sent</span></td><td>scheduled · approved by Anjali</td></tr>
+    </table>
+    <div class="foot">5 actions · <b>2 sent</b> · 2 waiting · 1 blocked — nothing happened that you can't explain.</div>
+  </div>
+</div>
+
+<section id="how">
+  <h2>How it works</h2>
+  <p class="sub">There is no channel API in the middle. You sign in once; Nightly's agents work in that session on your behalf, and your policy decides what they may do alone.</p>
+  <div class="steps">
+    <div class="step">
+      <div class="n">STEP 1</div>
+      <h3>Sign in once, on your machine</h3>
+      <p>A real browser window opens on airbnb.com. You log in. Nightly keeps the session in a profile on your computer and never sees the password.</p>
+    </div>
+    <div class="step">
+      <div class="n">STEP 2</div>
+      <h3>Write the rules</h3>
+      <p>Which questions can be answered automatically, at what confidence. Which topics always wait for you. Which are off-limits, full stop.</p>
+    </div>
+    <div class="step">
+      <div class="n">STEP 3</div>
+      <h3>Approve from your phone, read the log</h3>
+      <p>Drafts and price changes queue up for a tap. Everything — proposed, approved, sent, refused — is written to an audit log you own.</p>
+    </div>
+  </div>
+</section>
+
+<section id="replaces">
+  <h2>What it replaces</h2>
+  <p class="sub">We're building it feature by feature, on our own home in Encino first. A feature ships to you only after it has run there for two weeks without anyone opening Airbnb for that job.</p>
+  <div class="replace">
+    <div class="job">
+      <h3>Guest messaging &amp; automations</h3>
+      <p class="today">What Hospitable does today</p>
+      <ul>
+        <li><b>Now:</b> AI-drafted replies with intent + confidence, approval queue, audit log</li>
+        <li><b>Next:</b> scheduled messages — booking confirmed, check-in morning with the lock code, check-out eve, review request</li>
+        <li><b>Then:</b> unified inbox across Airbnb and Vrbo, turnover tasks and cleaner notifications</li>
+      </ul>
+    </div>
+    <div class="job">
+      <h3>Dynamic pricing</h3>
+      <p class="today">What PriceLabs does today</p>
+      <ul>
+        <li><b>Next:</b> seasonality, day-of-week, lead-time and orphan-gap-night rules that propose a 365-day price table</li>
+        <li><b>Always:</b> you see the diff and approve before anything is pushed to your calendar</li>
+        <li><b>Then:</b> min-stay by season, last-minute discounts, comps from your own market</li>
+      </ul>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="split">
+    <div>
+      <h2>The policy is the product</h2>
+      <p>Most host tools answer guests with AI and let you find out afterward. Nightly starts from the opposite default: nothing auto-sends until you say which intents may, and money — refunds, discounts, cancellations — is never the agent's call.</p>
+      <p>Rules are a short file you can read, first match wins, and a draft below its confidence threshold falls back to you instead of quietly sending.</p>
+    </div>
+    <pre class="policy"><span class="c"># ~/.nightly/policy.yaml</span>
+<span class="k">default:</span> <span class="v">needs_approval</span>
+<span class="k">rules:</span>
+  - <span class="k">name:</span> never-touch-money
+    <span class="k">match:</span> {kind: [send_message], intent: [refund, discount, cancellation]}
+    <span class="k">verdict:</span> <span class="v">blocked</span>
+  - <span class="k">name:</span> faq-auto
+    <span class="k">match:</span> {kind: [send_message], intent: [wifi, checkin_time, parking]}
+    <span class="k">min_confidence:</span> <span class="v">0.85</span>
+    <span class="k">verdict:</span> <span class="v">auto_approve</span>
+  - <span class="k">name:</span> calendar-needs-eyes
+    <span class="k">match:</span> {kind: [set_price, block_dates]}
+    <span class="k">verdict:</span> <span class="v">needs_approval</span></pre>
+  </div>
+</section>
+
+<section id="join">
+  <div class="join">
+    <h2>Private beta, 2027 — twenty to thirty hosts</h2>
+    <p>Free, hands-on onboarding, a weekly call, and a say in what gets built next. Best fit: you self-manage one to a few homes, you've been burned by an AI reply you didn't see, or you're paying for two tools that don't talk to each other.</p>
+    <p><a class="btn" href="mailto:hello@nightlyhost.com?subject=Nightly%20private%20beta">Email hello@nightlyhost.com</a></p>
+    <p>Include your listing link, how many homes, and what you use today.</p>
+  </div>
+</section>
+
+<footer>
+  <span>© 2026 Swar Housing LLC · Fremont, California</span>
+  <span>Built on our own Airbnb listing in Encino, CA. Not affiliated with Airbnb, Vrbo, Hospitable, or PriceLabs.</span>
+</footer>
+
+</div>
+</body>
+</html>
