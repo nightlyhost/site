@@ -4,169 +4,140 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Nightly</title>
-<meta name="description" content="Nightly runs on your own Airbnb account. It drafts guest replies, prices your nights, and schedules the turnover — and nothing goes out without your rules saying yes.">
+<meta name="description" content="Nightly runs inside your own Airbnb account. It drafts guest replies, sends your scheduled messages, and prices your nights — and nothing goes out without your rules saying yes.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Figtree:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
 <style>
   :root {
-    --paper: #f4f5f1;
-    --paper-2: #eaece6;
-    --ink: #151c2e;
-    --ink-2: #4a5263;
-    --rule: #cfd3c9;
-    --amber: #d99a1e;
-    --amber-ink: #8a5f06;
-    --ok: #2f7d4f;
-    --hold: #b3661a;
-    --block: #a83a32;
-    --mono-bg: #1b2236;
-    --mono-fg: #e6e9f0;
-    --mono-dim: #8b93a7;
+    --paper: #fbfaf9; --panel: #f4f1f0; --card: #ffffff;
+    --ink: #1c1a1d; --ink-2: #6d6870; --rule: #e9e5e4;
+    --red: #d8263e; --red-deep: #b41c31; --red-tint: #fcecee;
+    --ok: #1f8a5b; --ok-tint: #e8f4ee; --hold: #8f5e12; --hold-tint: #fbf3e4;
+    --shadow: 0 1px 2px rgba(28,26,29,.05), 0 20px 50px -28px rgba(28,26,29,.35);
     color-scheme: light;
   }
   @media (prefers-color-scheme: dark) {
     :root:not([data-theme="light"]) {
-      --paper: #12172a; --paper-2: #1a2036; --ink: #eef0f4; --ink-2: #a9b0c1; --rule: #2b334a;
-      --amber: #e5ab34; --amber-ink: #f0c15c; --ok: #6cc08b; --hold: #e39a4f; --block: #e07068;
-      --mono-bg: #0b0f1c; --mono-fg: #e6e9f0; --mono-dim: #7d859a; color-scheme: dark;
+      --paper: #151316; --panel: #1e1b1f; --card: #232025; --ink: #f3f0f1; --ink-2: #a9a3ab; --rule: #322e33;
+      --red: #ff5a6e; --red-deep: #ff8391; --red-tint: #3a1a20; --ok: #6cc08b; --ok-tint: #1b3327; --hold: #f0c15c; --hold-tint: #3a2f16;
+      --shadow: 0 1px 2px rgba(0,0,0,.4), 0 20px 50px -28px rgba(0,0,0,.7); color-scheme: dark;
     }
   }
   :root[data-theme="dark"] {
-    --paper: #12172a; --paper-2: #1a2036; --ink: #eef0f4; --ink-2: #a9b0c1; --rule: #2b334a;
-    --amber: #e5ab34; --amber-ink: #f0c15c; --ok: #6cc08b; --hold: #e39a4f; --block: #e07068;
-    --mono-bg: #0b0f1c; --mono-fg: #e6e9f0; --mono-dim: #7d859a; color-scheme: dark;
+    --paper: #151316; --panel: #1e1b1f; --card: #232025; --ink: #f3f0f1; --ink-2: #a9a3ab; --rule: #322e33;
+    --red: #ff5a6e; --red-deep: #ff8391; --red-tint: #3a1a20; --ok: #6cc08b; --ok-tint: #1b3327; --hold: #f0c15c; --hold-tint: #3a2f16;
+    --shadow: 0 1px 2px rgba(0,0,0,.4), 0 20px 50px -28px rgba(0,0,0,.7); color-scheme: dark;
   }
 
   * { box-sizing: border-box; }
-  html { -webkit-text-size-adjust: 100%; }
-  body {
-    margin: 0; background: var(--paper); color: var(--ink);
-    font-family: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
-    font-size: 17px; line-height: 1.55;
-    padding-inline: clamp(16px, 5vw, 48px); padding-block: 0 64px;
-  }
+  html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+  body { margin: 0; background: var(--paper); color: var(--ink); font-family: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif; font-size: 17px; line-height: 1.55; padding-inline: clamp(16px, 5vw, 48px); padding-block: 0 56px; }
   a { color: inherit; }
   .wrap { max-width: 1080px; margin-inline: auto; }
+  h1, h2, h3 { font-family: "Instrument Serif", Georgia, serif; font-weight: 400; letter-spacing: -0.01em; text-wrap: balance; margin: 0; }
+  p { max-width: 62ch; margin: 0; }
+  .eyebrow { font-size: 12px; letter-spacing: .12em; text-transform: uppercase; color: var(--ink-2); font-weight: 600; }
 
-  header.top {
-    display: flex; align-items: baseline; justify-content: space-between; gap: 16px;
-    padding-block: 22px 0; border-bottom: 1px solid var(--rule);
-  }
-  .brand { font-family: "Instrument Serif", Georgia, serif; font-size: 28px; letter-spacing: -0.01em; text-decoration: none; }
-  .brand i { color: var(--amber); font-style: normal; }
-  .top nav { display: flex; gap: 22px; font-size: 15px; color: var(--ink-2); }
+  header.top { display: flex; align-items: center; justify-content: space-between; gap: 16px; padding-block: 22px 18px; border-bottom: 1px solid var(--rule); }
+  .brand { font-family: "Instrument Serif", Georgia, serif; font-size: 28px; text-decoration: none; }
+  .brand i { color: var(--red); }
+  .top nav { display: flex; gap: 22px; font-size: 15px; color: var(--ink-2); align-items: center; }
   .top nav a { text-decoration: none; }
-  .top nav a:hover, .top nav a:focus-visible { color: var(--ink); text-decoration: underline; text-underline-offset: 4px; }
+  .top nav a:hover, .top nav a:focus-visible { color: var(--ink); }
+  .btn { display: inline-flex; align-items: center; justify-content: center; min-height: 44px; padding: 10px 20px; border-radius: 8px; font-weight: 600; font-size: 15px; text-decoration: none; border: 0; cursor: pointer; font-family: inherit; }
+  .btn.red { background: var(--red); color: #fff; }
+  .btn.red:hover, .btn.red:focus-visible { background: var(--red-deep); }
+  .btn.ink { background: var(--ink); color: var(--paper); }
+  .btn.ink:hover, .btn.ink:focus-visible { background: var(--red); color: #fff; }
+  .btn:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--paper), 0 0 0 5px var(--red); }
+  .top .btn { min-height: 38px; padding: 6px 14px; font-size: 14px; }
 
-  .hero {
-    display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr); gap: 48px;
-    align-items: start; padding-block: 64px 56px;
-  }
-  .eyebrow { font-size: 13px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--amber-ink); font-weight: 600; margin: 0 0 18px; }
-  h1 {
-    font-family: "Instrument Serif", Georgia, serif; font-weight: 400;
-    font-size: clamp(40px, 5.6vw, 66px); line-height: 1.02; letter-spacing: -0.015em;
-    margin: 0 0 22px; text-wrap: balance;
-  }
-  h1 em { font-style: italic; color: var(--amber-ink); }
-  .lede { font-size: 19px; color: var(--ink-2); max-width: 34em; margin: 0 0 30px; text-wrap: pretty; }
+  .hero { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 56px; align-items: center; padding-block: 64px 64px; }
+  h1 { font-size: clamp(42px, 5.8vw, 68px); line-height: 1.02; letter-spacing: -0.015em; margin-bottom: 20px; }
+  h1 em { font-style: italic; color: var(--red); }
+  .lede { font-size: 19px; color: var(--ink-2); max-width: 32em; margin-bottom: 28px; text-wrap: pretty; }
   .cta { display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: center; }
-  .btn {
-    display: inline-block; background: var(--ink); color: var(--paper); text-decoration: none;
-    padding: 12px 20px; border-radius: 4px; font-weight: 600; font-size: 16px;
-  }
-  .btn:hover, .btn:focus-visible { background: var(--amber); color: #151c2e; outline: none; }
-  .btn:focus-visible { box-shadow: 0 0 0 3px var(--paper), 0 0 0 5px var(--amber); }
   .cta small { color: var(--ink-2); font-size: 14px; }
 
-  /* the audit ledger — this is the product */
-  .ledger {
-    background: var(--mono-bg); color: var(--mono-fg); border-radius: 6px;
-    font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
-    font-size: 13px; line-height: 1.5; padding: 18px 20px 20px; overflow-x: auto;
-    box-shadow: 0 24px 60px -30px rgba(0,0,0,.45);
-  }
-  .ledger .t { color: var(--mono-dim); display: flex; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
-  .ledger table { border-collapse: collapse; width: 100%; min-width: 440px; font-variant-numeric: tabular-nums; }
-  .ledger td { padding: 5px 10px 5px 0; vertical-align: top; white-space: nowrap; border-top: 1px dashed rgba(255,255,255,.08); }
-  .ledger tr:first-child td { border-top: 0; }
-  .ledger td:first-child { color: var(--mono-dim); }
-  .ledger td.msg { white-space: normal; min-width: 200px; }
-  .ledger td:last-child { white-space: normal; color: var(--mono-dim); font-size: 12px; min-width: 120px; padding-right: 0; }
-  .pill { display: inline-block; padding: 1px 7px; border-radius: 3px; font-weight: 500; font-size: 12px; }
-  .pill.ok { background: rgba(108,192,139,.16); color: #8fd8a8; }
-  .pill.hold { background: rgba(227,154,79,.16); color: #f0b46e; }
-  .pill.block { background: rgba(224,112,104,.16); color: #f19a94; }
-  .ledger .foot { margin-top: 12px; color: var(--mono-dim); }
-  .ledger .foot b { color: var(--mono-fg); font-weight: 500; }
+  /* the approval card — what the host actually sees */
+  .card { background: var(--card); border: 1px solid var(--rule); border-radius: 14px; box-shadow: var(--shadow); overflow: hidden; font-size: 14px; }
+  .card .head { display: flex; align-items: center; gap: 12px; padding: 14px 18px; border-bottom: 1px solid var(--rule); }
+  .avatar { width: 34px; height: 34px; border-radius: 50%; background: var(--red-tint); color: var(--red-deep); font-weight: 600; display: grid; place-items: center; flex-shrink: 0; }
+  .card .who { display: grid; gap: 1px; flex-grow: 1; }
+  .card .who b { font-weight: 600; }
+  .card .who span { font-size: 12px; color: var(--ink-2); }
+  .tag { font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; padding: 4px 8px; border-radius: 999px; white-space: nowrap; }
+  .tag.hold { color: var(--hold); background: var(--hold-tint); }
+  .card .body { display: grid; gap: 12px; padding: 16px 18px; }
+  .card .lbl { font-size: 11px; letter-spacing: .08em; text-transform: uppercase; font-weight: 600; color: var(--ink-2); display: flex; justify-content: space-between; margin-bottom: 4px; }
+  .card .lbl span { letter-spacing: 0; text-transform: none; font-weight: 400; font-size: 12px; }
+  .card .guest { padding: 10px 12px; background: var(--panel); border-radius: 8px; line-height: 1.5; }
+  .card .draft { padding: 10px 12px; border: 1px solid var(--rule); border-radius: 8px; line-height: 1.55; }
+  .card .why { display: flex; gap: 8px; font-size: 12px; color: var(--ink-2); line-height: 1.45; }
+  .card .why svg { flex-shrink: 0; margin-top: 2px; }
+  .card .acts { display: flex; gap: 8px; padding: 12px 18px 16px; }
+  .card .acts .btn { flex-grow: 1; }
+  .card .acts .ghost { background: transparent; color: var(--ink); border: 1px solid var(--rule); flex-grow: 0; }
+  .card .acts .quiet { background: transparent; color: var(--ink-2); flex-grow: 0; padding-inline: 10px; }
 
-  section { padding-block: 48px; border-top: 1px solid var(--rule); }
-  h2 {
-    font-family: "Instrument Serif", Georgia, serif; font-weight: 400;
-    font-size: clamp(28px, 3.4vw, 38px); line-height: 1.1; letter-spacing: -0.01em; margin: 0 0 12px; text-wrap: balance;
-  }
-  .sub { color: var(--ink-2); max-width: 38em; margin: 0 0 32px; }
-  p { max-width: 62ch; }
+  section { padding-block: 56px; border-top: 1px solid var(--rule); }
+  h2 { font-size: clamp(30px, 3.6vw, 42px); line-height: 1.08; margin-bottom: 12px; }
+  .sub { color: var(--ink-2); max-width: 40em; margin-bottom: 36px; }
 
-  .steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 28px; }
-  .step { border-top: 2px solid var(--ink); padding-top: 14px; }
-  .step .n { font-family: "JetBrains Mono", monospace; font-size: 12px; color: var(--amber-ink); letter-spacing: .08em; }
-  .step h3 { font-size: 20px; margin: 6px 0 8px; font-weight: 600; }
-  .step p { margin: 0; color: var(--ink-2); font-size: 16px; }
+  .steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px; }
+  .step { display: grid; gap: 8px; align-content: start; padding: 20px; background: var(--card); border: 1px solid var(--rule); border-radius: 12px; }
+  .step .n { font-family: "Instrument Serif", Georgia, serif; font-size: 36px; line-height: 1; color: var(--red); }
+  .step h3 { font-size: 20px; font-family: "Figtree", sans-serif; font-weight: 600; letter-spacing: 0; }
+  .step p { font-size: 15px; color: var(--ink-2); }
+  .step .t { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-2); }
+  .after { margin-top: 20px; padding: 18px 22px; background: var(--panel); border-radius: 12px; display: flex; gap: 14px; align-items: flex-start; flex-wrap: wrap; }
+  .after b { font-weight: 600; }
+  .after p { color: var(--ink-2); font-size: 15px; }
+  .badge { display: inline-grid; place-items: center; width: 40px; height: 40px; border-radius: 10px; background: var(--card); border: 1px solid var(--rule); position: relative; flex-shrink: 0; }
+  .badge i { position: absolute; top: -6px; right: -6px; background: var(--red); color: #fff; font-style: normal; font-size: 11px; font-weight: 600; border-radius: 999px; padding: 1px 6px; }
 
-  .replace { display: grid; grid-template-columns: 1fr 1fr; gap: 28px; }
-  .job { background: var(--paper-2); border-radius: 6px; padding: 22px 24px; }
-  .job h3 { margin: 0 0 6px; font-size: 20px; font-weight: 600; }
+  .never { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px 32px; padding: 0; margin: 0; list-style: none; max-width: 820px; }
+  .never li { display: grid; grid-template-columns: 20px 1fr; gap: 12px; align-items: start; font-size: 16px; }
+  .never li svg { margin-top: 3px; }
+
+  .replace { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  .job { background: var(--card); border: 1px solid var(--rule); border-radius: 12px; padding: 22px 24px; }
+  .job h3 { margin: 0 0 4px; font-size: 22px; }
   .job .today { font-size: 14px; color: var(--ink-2); margin: 0 0 14px; }
   .job ul { margin: 0; padding-left: 18px; color: var(--ink-2); font-size: 16px; }
-  .job li { margin: 4px 0; }
+  .job li { margin: 6px 0; }
   .job li b { color: var(--ink); font-weight: 600; }
 
-  pre.policy {
-    background: var(--mono-bg); color: var(--mono-fg); border-radius: 6px; padding: 18px 20px; margin: 0;
-    font-family: "JetBrains Mono", ui-monospace, monospace; font-size: 13px; line-height: 1.55; overflow-x: auto;
-  }
-  pre.policy .c { color: var(--mono-dim); }
-  pre.policy .k { color: #9ec5ff; }
-  pre.policy .v { color: #f0c15c; }
-  .split { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; align-items: start; }
-
-  .join { background: var(--ink); color: var(--paper); border-radius: 8px; padding: 40px clamp(20px, 4vw, 48px); }
+  .join { background: var(--ink); color: var(--paper); border-radius: 16px; padding: 44px clamp(20px, 4vw, 48px); display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); gap: 40px; align-items: start; }
   .join h2 { color: inherit; }
-  .join p { color: color-mix(in srgb, var(--paper) 78%, transparent); }
-  .join .btn { background: var(--amber); color: #151c2e; }
-  .join .btn:hover, .join .btn:focus-visible { background: var(--paper); }
-  .join code { font-family: "JetBrains Mono", monospace; font-size: 15px; }
-
-  .beta { display: grid; gap: 14px; max-width: 560px; margin-top: 8px; }
+  .join p { color: color-mix(in srgb, var(--paper) 78%, transparent); font-size: 16px; }
+  .join .promise { display: grid; gap: 10px; margin-top: 22px; font-size: 15px; }
+  .join .promise div { display: flex; gap: 10px; align-items: center; color: color-mix(in srgb, var(--paper) 88%, transparent); }
+  .beta { display: grid; gap: 14px; }
   .beta .row { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   .beta .field { display: grid; gap: 6px; }
-  .beta label { font-size: 13px; letter-spacing: .04em; text-transform: uppercase; color: color-mix(in srgb, var(--paper) 70%, transparent); }
-  .beta input {
-    font: inherit; font-size: 16px; color: var(--paper); background: color-mix(in srgb, var(--paper) 8%, transparent);
-    border: 1px solid color-mix(in srgb, var(--paper) 28%, transparent); border-radius: 4px; padding: 10px 12px; width: 100%;
-  }
+  .beta label { font-size: 12px; letter-spacing: .06em; text-transform: uppercase; font-weight: 600; color: color-mix(in srgb, var(--paper) 70%, transparent); }
+  .beta input { font: inherit; font-size: 16px; color: var(--paper); background: color-mix(in srgb, var(--paper) 8%, transparent); border: 1px solid color-mix(in srgb, var(--paper) 25%, transparent); border-radius: 8px; padding: 11px 12px; width: 100%; min-height: 44px; }
   .beta input::placeholder { color: color-mix(in srgb, var(--paper) 40%, transparent); }
-  .beta input:focus-visible { outline: none; border-color: var(--amber); box-shadow: 0 0 0 3px color-mix(in srgb, var(--amber) 35%, transparent); }
+  .beta input:focus-visible { outline: none; border-color: var(--red); box-shadow: 0 0 0 3px color-mix(in srgb, var(--red) 35%, transparent); }
   .beta .actions { display: flex; flex-wrap: wrap; align-items: center; gap: 10px 16px; margin-top: 4px; }
-  .beta .btn { border: 0; cursor: pointer; font: inherit; font-weight: 600; }
   .beta .alt { font-size: 14px; color: color-mix(in srgb, var(--paper) 70%, transparent); }
-  .beta .thanks { margin: 0; color: var(--amber); font-weight: 500; }
-  @media (max-width: 520px) { .beta .row { grid-template-columns: 1fr; } }
+  .beta .thanks { color: var(--red); font-weight: 500; }
+  :root[data-theme="dark"] .beta .thanks, .beta .thanks { color: #ff8391; }
 
-  footer { padding-top: 32px; border-top: 1px solid var(--rule); color: var(--ink-2); font-size: 14px; display: flex; flex-wrap: wrap; gap: 8px 28px; justify-content: space-between; }
+  footer { padding-top: 28px; border-top: 1px solid var(--rule); color: var(--ink-2); font-size: 14px; display: flex; flex-wrap: wrap; gap: 8px 28px; justify-content: space-between; }
 
+  @media (max-width: 900px) { .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
   @media (max-width: 820px) {
-    .hero, .replace, .split { grid-template-columns: 1fr; }
-    .steps { grid-template-columns: 1fr; gap: 20px; }
-    .hero { padding-block: 40px 40px; gap: 32px; }
-    .top nav { gap: 14px; }
+    .hero, .replace, .join { grid-template-columns: 1fr; }
+    .hero { padding-block: 40px 44px; gap: 36px; }
+    .never { grid-template-columns: 1fr; }
+    .top nav a:not(.btn) { display: none; }
   }
+  @media (max-width: 560px) { .steps, .beta .row { grid-template-columns: 1fr; } }
   @media (prefers-reduced-motion: no-preference) {
-    .ledger tr { animation: rise .5s ease both; }
-    .ledger tr:nth-child(2) { animation-delay: .08s } .ledger tr:nth-child(3) { animation-delay: .16s }
-    .ledger tr:nth-child(4) { animation-delay: .24s } .ledger tr:nth-child(5) { animation-delay: .32s }
-    @keyframes rise { from { opacity: .35; transform: translateY(3px) } to { opacity: 1; transform: none } }
+    .card { animation: rise .6s ease both; }
+    @keyframes rise { from { opacity: .5; transform: translateY(6px) } to { opacity: 1; transform: none } }
   }
 </style>
 </head>
@@ -174,58 +145,102 @@
 <div class="wrap">
 
 <header class="top">
-  <a class="brand" href="/">Nightly<i>.</i></a>
+  <a class="brand" href="/">night<i>ly</i></a>
   <nav aria-label="Sections">
     <a href="#how">How it works</a>
+    <a href="#never">What it never does</a>
     <a href="#replaces">What it replaces</a>
-    <a href="#join">Private beta</a>
+    <a class="btn red" href="#join">Join the beta</a>
   </nav>
 </header>
 
 <div class="hero">
   <div>
-    <p class="eyebrow">For Airbnb hosts with 1–30 homes</p>
-    <h1>Your listing, run by agents that <em>ask first.</em></h1>
-    <p class="lede">Nightly works inside your own Airbnb account. It drafts guest replies, prices your nights, and lines up the turnover — and every message, price change, and calendar edit goes through rules you wrote, with a log you can read.</p>
+    <p class="eyebrow" style="margin-bottom:16px">For Airbnb hosts with 1–30 homes</p>
+    <h1>Your Airbnb, run by an assistant that <em>asks first.</em></h1>
+    <p class="lede">Nightly lives in your Chrome, next to the Airbnb tab you already use. It drafts guest replies, sends your scheduled messages, and proposes prices — and every one of them waits for your tap until you say it doesn't have to.</p>
     <div class="cta">
-      <a class="btn" href="#join">Join the private beta</a>
-      <small>Free during beta · no API keys, no password stored</small>
+      <a class="btn red" href="#join">Request an invite</a>
+      <small>Free during beta · nothing to install but a Chrome extension</small>
     </div>
   </div>
 
-  <div class="ledger" aria-label="Example audit log">
-    <div class="t"><span>~/.nightly/audit.db</span><span>encino · last 24h</span></div>
-    <table>
-      <tr><td>07:42</td><td class="msg">Guest asked for Wi-Fi password</td><td><span class="pill ok">auto-sent</span></td><td>faq-auto · 0.96</td></tr>
-      <tr><td>09:15</td><td class="msg">Guest asked about early check-in</td><td><span class="pill hold">waiting for you</span></td><td>default</td></tr>
-      <tr><td>11:03</td><td class="msg">Oct 3–5 gap night: $189 → $159</td><td><span class="pill hold">waiting for you</span></td><td>calendar-needs-eyes</td></tr>
-      <tr><td>13:27</td><td class="msg">Guest asked for a partial refund</td><td><span class="pill block">blocked</span></td><td>never-touch-money</td></tr>
-      <tr><td>16:00</td><td class="msg">Check-out eve reminder to Priya M.</td><td><span class="pill ok">auto-sent</span></td><td>scheduled · approved by Anjali</td></tr>
-    </table>
-    <div class="foot">5 actions · <b>2 sent</b> · 2 waiting · 1 blocked — nothing happened that you can't explain.</div>
+  <div class="card" aria-label="Example: a draft waiting for approval">
+    <div class="head">
+      <div class="avatar">A</div>
+      <div class="who"><b>Atul · Inquiry</b><span>Oct 18 – 20 · 1 guest · responds within 24 h</span></div>
+      <span class="tag hold">Needs you</span>
+    </div>
+    <div class="body">
+      <div>
+        <div class="lbl">Guest wrote</div>
+        <div class="guest">Hi Anjali! Quick question before I book: is the pool heated in October, and is early check-in around 2pm ever possible?</div>
+      </div>
+      <div>
+        <div class="lbl">Nightly's draft <span>Early check-in · fairly sure</span></div>
+        <div class="draft">Hi Atul, thanks for asking! The pool isn't heated — a heater is planned for late September, so I'll let you know if that changes before your dates. Early check-in around 2pm is usually fine when there's no same-day turnover; I'll confirm a few days before. — Anjali</div>
+      </div>
+      <div class="why"><svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg><span>Used two facts from your house page: pool not heated, early check-in policy. Nothing about price.</span></div>
+    </div>
+    <div class="acts">
+      <span class="btn red">Approve &amp; send</span>
+      <span class="btn ghost">Edit</span>
+      <span class="btn quiet">Reject</span>
+    </div>
   </div>
 </div>
 
 <section id="how">
-  <h2>How it works</h2>
-  <p class="sub">There is no channel API in the middle. You sign in once; Nightly's agents work in that session on your behalf, and your policy decides what they may do alone.</p>
+  <h2>Set up in five minutes. Nothing typed but corrections.</h2>
+  <p class="sub">There is no channel API in the middle and no password to hand over. Nightly works inside the Chrome you're already signed into, and you decide what it may do without asking.</p>
   <div class="steps">
     <div class="step">
-      <div class="n">STEP 1</div>
-      <h3>Sign in once, on your machine</h3>
-      <p>A real browser window opens on airbnb.com. You log in. Nightly keeps the session in a profile on your computer and never sees the password.</p>
+      <div class="n">1</div>
+      <h3>Add Nightly to Chrome</h3>
+      <p>It finds the Airbnb tab you're already signed into and shows “Connected as you · 1 listing”. Connect Gmail with one click so it wakes up the minute a guest writes.</p>
+      <div class="t">1 minute</div>
     </div>
     <div class="step">
-      <div class="n">STEP 2</div>
-      <h3>Write the rules</h3>
-      <p>Which questions can be answered automatically, at what confidence. Which topics always wait for you. Which are off-limits, full stop.</p>
+      <div class="n">2</div>
+      <h3>Check your house facts</h3>
+      <p>Check-in times, Wi-Fi, parking, pool, rules — read from your listing and shown as cards. Fix two or three. These are the only facts it will ever tell a guest.</p>
+      <div class="t">2 minutes</div>
     </div>
     <div class="step">
-      <div class="n">STEP 3</div>
-      <h3>Approve from your phone, read the log</h3>
-      <p>Drafts and price changes queue up for a tap. Everything — proposed, approved, sent, refused — is written to an audit log you own.</p>
+      <div class="n">3</div>
+      <h3>Decide what it may do alone</h3>
+      <p>Three switches, all off: answer simple questions, send scheduled messages, ask for reviews. For the first week you approve everything — that's how trust is earned.</p>
+      <div class="t">30 seconds</div>
+    </div>
+    <div class="step">
+      <div class="n">4</div>
+      <h3>Approve your first draft</h3>
+      <p>It has already read your newest guest message and written a reply. Approve, edit, or reject — approving sends it through your own Airbnb tab, as if you typed it.</p>
+      <div class="t">1 minute</div>
     </div>
   </div>
+  <div class="after">
+    <div class="badge"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3a6 6 0 0 0-6 6v3.5L4 16h16l-2-3.5V9a6 6 0 0 0-6-6z"/><path d="M10 20a2 2 0 0 0 4 0"/></svg><i>2</i></div>
+    <div>
+      <b>After that, it's a badge in your toolbar.</b>
+      <p>Twice a day, open it, tap through what's waiting, and read the log whenever you're curious — every message, who decided, and why. Two minutes, not two apps.</p>
+    </div>
+  </div>
+</section>
+
+<section id="never">
+  <h2>What it never does on its own</h2>
+  <p class="sub">Whatever switches you turn on, these always land in your queue — or are refused outright. It's not a setting; it's the product.</p>
+  <ul class="never">
+    <li><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="var(--red)" stroke-width="2" stroke-linecap="round"><circle cx="10" cy="10" r="8"/><path d="M6.5 6.5l7 7M13.5 6.5l-7 7"/></svg><span>Offer, promise, or discuss a refund, discount, fee, or price</span></li>
+    <li><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="var(--red)" stroke-width="2" stroke-linecap="round"><circle cx="10" cy="10" r="8"/><path d="M6.5 6.5l7 7M13.5 6.5l-7 7"/></svg><span>Cancel, or walk a guest through cancelling</span></li>
+    <li><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="var(--red)" stroke-width="2" stroke-linecap="round"><circle cx="10" cy="10" r="8"/><path d="M6.5 6.5l7 7M13.5 6.5l-7 7"/></svg><span>Send a door or gate code to anyone without a confirmed booking</span></li>
+    <li><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="var(--red)" stroke-width="2" stroke-linecap="round"><circle cx="10" cy="10" r="8"/><path d="M6.5 6.5l7 7M13.5 6.5l-7 7"/></svg><span>Send a link, a phone number, or suggest paying off Airbnb</span></li>
+    <li><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="var(--red)" stroke-width="2" stroke-linecap="round"><circle cx="10" cy="10" r="8"/><path d="M6.5 6.5l7 7M13.5 6.5l-7 7"/></svg><span>Accept or decline a booking request</span></li>
+    <li><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="var(--red)" stroke-width="2" stroke-linecap="round"><circle cx="10" cy="10" r="8"/><path d="M6.5 6.5l7 7M13.5 6.5l-7 7"/></svg><span>Change a price or block dates without showing you the diff</span></li>
+    <li><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="var(--red)" stroke-width="2" stroke-linecap="round"><circle cx="10" cy="10" r="8"/><path d="M6.5 6.5l7 7M13.5 6.5l-7 7"/></svg><span>Reply to anything about damage, complaints, lawyers, or police</span></li>
+    <li><svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="var(--red)" stroke-width="2" stroke-linecap="round"><circle cx="10" cy="10" r="8"/><path d="M6.5 6.5l7 7M13.5 6.5l-7 7"/></svg><span>Invent a fact that isn't on your house page — it says you'll confirm instead</span></li>
+  </ul>
 </section>
 
 <section id="replaces">
@@ -236,50 +251,34 @@
       <h3>Guest messaging &amp; automations</h3>
       <p class="today">What Hospitable does today</p>
       <ul>
-        <li><b>Now:</b> AI-drafted replies with intent + confidence, approval queue, audit log</li>
-        <li><b>Next:</b> scheduled messages — booking confirmed, check-in morning with the lock code, check-out eve, review request</li>
-        <li><b>Then:</b> unified inbox across Airbnb and Vrbo, turnover tasks and cleaner notifications</li>
+        <li><b>Now:</b> drafted replies with an approval queue and a log you can read</li>
+        <li><b>Next:</b> scheduled messages — booking confirmed, check-in morning with the door code, check-out eve, review request</li>
+        <li><b>Then:</b> one inbox across Airbnb and Vrbo, turnover tasks and cleaner notifications</li>
       </ul>
     </div>
     <div class="job">
       <h3>Dynamic pricing</h3>
       <p class="today">What PriceLabs does today</p>
       <ul>
-        <li><b>Next:</b> seasonality, day-of-week, lead-time and orphan-gap-night rules that propose a 365-day price table</li>
-        <li><b>Always:</b> you see the diff and approve before anything is pushed to your calendar</li>
-        <li><b>Then:</b> min-stay by season, last-minute discounts, comps from your own market</li>
+        <li><b>Later:</b> seasonality, day-of-week, lead-time and gap-night rules that propose a year of prices</li>
+        <li><b>Always:</b> you see the change before anything is pushed to your calendar</li>
+        <li><b>Then:</b> minimum stays by season, last-minute discounts, comps from your own market</li>
       </ul>
     </div>
   </div>
 </section>
 
-<section>
-  <div class="split">
-    <div>
-      <h2>The policy is the product</h2>
-      <p>Most host tools answer guests with AI and let you find out afterward. Nightly starts from the opposite default: nothing auto-sends until you say which intents may, and money — refunds, discounts, cancellations — is never the agent's call.</p>
-      <p>Rules are a short file you can read, first match wins, and a draft below its confidence threshold falls back to you instead of quietly sending.</p>
-    </div>
-    <pre class="policy"><span class="c"># ~/.nightly/policy.yaml</span>
-<span class="k">default:</span> <span class="v">needs_approval</span>
-<span class="k">rules:</span>
-  - <span class="k">name:</span> never-touch-money
-    <span class="k">match:</span> {kind: [send_message], intent: [refund, discount, cancellation]}
-    <span class="k">verdict:</span> <span class="v">blocked</span>
-  - <span class="k">name:</span> faq-auto
-    <span class="k">match:</span> {kind: [send_message], intent: [wifi, checkin_time, parking]}
-    <span class="k">min_confidence:</span> <span class="v">0.85</span>
-    <span class="k">verdict:</span> <span class="v">auto_approve</span>
-  - <span class="k">name:</span> calendar-needs-eyes
-    <span class="k">match:</span> {kind: [set_price, block_dates]}
-    <span class="k">verdict:</span> <span class="v">needs_approval</span></pre>
-  </div>
-</section>
-
 <section id="join">
   <div class="join">
-    <h2>Private beta, 2027 — twenty to thirty hosts</h2>
-    <p>Free, hands-on onboarding, a weekly call, and a say in what gets built next. Best fit: you self-manage one to a few homes, you've been burned by an AI reply you didn't see, or you're paying for two tools that don't talk to each other.</p>
+    <div>
+      <h2>Private beta — twenty to thirty hosts</h2>
+      <p>Free, with hands-on setup on a call and a say in what gets built next. Best fit: you self-manage one to a few homes, you've been burned by an AI reply you never saw, or you're paying for two tools that don't talk to each other.</p>
+      <div class="promise">
+        <div><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="#6cc08b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"/></svg>Nothing leaves your computer but the text of a draft</div>
+        <div><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="#6cc08b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"/></svg>Disconnect in one click, and we delete everything</div>
+        <div><svg width="18" height="18" viewBox="0 0 20 20" fill="none" stroke="#6cc08b" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 10.5l4 4 8-9"/></svg>We'll tell you plainly what Airbnb's terms say before you connect</div>
+      </div>
+    </div>
     <form id="beta-form" class="beta" action="https://docs.google.com/forms/d/e/1FAIpQLSfecxg0gJbbVu3JT1WYbArCMFqh5QKC6i2pSiRVxJL3vUNWgg/formResponse" method="POST" target="beta-sink">
       <div class="field"><label for="f-email">Email</label><input id="f-email" name="entry.427826923" type="email" required autocomplete="email" placeholder="you@example.com"></div>
       <div class="field"><label for="f-listing">Listing link</label><input id="f-listing" name="entry.828368156" type="url" inputmode="url" placeholder="https://airbnb.com/rooms/…"></div>
@@ -288,7 +287,7 @@
         <div class="field"><label for="f-tools">What you use today</label><input id="f-tools" name="entry.1586031341" type="text" placeholder="Hospitable, PriceLabs, nothing…"></div>
       </div>
       <div class="actions">
-        <button class="btn" type="submit" id="beta-submit">Request an invite</button>
+        <button class="btn red" type="submit" id="beta-submit">Request an invite</button>
         <span class="alt">or email <a href="mailto:hello@nightlyhost.com">hello@nightlyhost.com</a></span>
       </div>
       <p class="thanks" id="beta-thanks" hidden>Got it — we'll reply from hello@nightlyhost.com within a few days.</p>
