@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Using Nightly with Airbnb · Nightly</title>
+<meta name="description" content="Exactly how Nightly works inside your Airbnb session, what Airbnb's terms say about it, and what you are agreeing to.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Figtree:wght@400;500;600&display=swap">
+<style>
+  :root {
+    --paper:#fbfaf9; --panel:#f4f1f0; --card:#fff; --ink:#1c1a1d; --ink-2:#6d6870; --rule:#e9e5e4;
+    --red:#d8263e; --red-deep:#b41c31; --red-tint:#fcecee; --ok:#1f8a5b; --ok-tint:#e8f4ee;
+    color-scheme: light;
+  }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) {
+    --paper:#151316; --panel:#1e1b1f; --card:#232025; --ink:#f3f0f1; --ink-2:#a9a3ab; --rule:#322e33;
+    --red:#ff5a6e; --red-deep:#ff8391; --red-tint:#3a1a20; --ok:#6cc08b; --ok-tint:#1b3327;
+    color-scheme: dark;
+  } }
+  :root[data-theme="dark"] {
+    --paper:#151316; --panel:#1e1b1f; --card:#232025; --ink:#f3f0f1; --ink-2:#a9a3ab; --rule:#322e33;
+    --red:#ff5a6e; --red-deep:#ff8391; --red-tint:#3a1a20; --ok:#6cc08b; --ok-tint:#1b3327;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; }
+  html { -webkit-text-size-adjust: 100%; }
+  body { margin: 0; background: var(--paper); color: var(--ink);
+    font-family: "Figtree", system-ui, -apple-system, "Segoe UI", sans-serif;
+    font-size: 17px; line-height: 1.6; padding-inline: clamp(16px, 5vw, 48px); padding-block: 0 64px; }
+  .wrap { max-width: 720px; margin-inline: auto; }
+  a { color: var(--red); }
+  h1, h2, h3 { font-family: "Instrument Serif", Georgia, serif; font-weight: 400;
+    letter-spacing: -.01em; text-wrap: balance; margin: 0; }
+  h1 { font-size: clamp(34px, 5vw, 46px); line-height: 1.05; margin-bottom: 10px; }
+  h2 { font-size: clamp(24px, 3vw, 30px); margin: 40px 0 10px; }
+  h3 { font-family: "Figtree", sans-serif; font-weight: 600; font-size: 17px; margin: 24px 0 6px; }
+  p, li { max-width: 68ch; }
+  p { margin: 0 0 14px; }
+  ul { margin: 0 0 14px; padding-left: 22px; }
+  li { margin: 6px 0; }
+  header.top { display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    padding-block: 22px 18px; border-bottom: 1px solid var(--rule); margin-bottom: 40px; }
+  .brand { font-family: "Instrument Serif", Georgia, serif; font-size: 26px; text-decoration: none; color: var(--ink); }
+  .brand i { color: var(--red); font-style: italic; }
+  .top a.back { font-size: 15px; color: var(--ink-2); text-decoration: none; }
+  .top a.back:hover { color: var(--ink); }
+  .stamp { color: var(--ink-2); font-size: 15px; margin-bottom: 28px; }
+  .note { background: var(--panel); border-radius: 12px; padding: 16px 18px; margin: 0 0 28px; }
+  .note p:last-child { margin-bottom: 0; }
+  table { border-collapse: collapse; width: 100%; font-size: 15.5px; margin: 0 0 18px; }
+  th, td { text-align: left; vertical-align: top; padding: 10px 12px 10px 0; border-bottom: 1px solid var(--rule); }
+  th { font-weight: 600; font-size: 13px; letter-spacing: .05em; text-transform: uppercase; color: var(--ink-2); }
+  .tw { overflow-x: auto; }
+  .never { background: var(--red-tint); border-radius: 12px; padding: 16px 18px; margin: 0 0 22px; }
+  .never p:last-child, .never ul:last-child { margin-bottom: 0; }
+  footer { margin-top: 56px; padding-top: 24px; border-top: 1px solid var(--rule);
+    color: var(--ink-2); font-size: 14.5px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+<header class="top">
+  <a class="brand" href="/">night<i>ly</i></a>
+  <a class="back" href="/">Back to nightlyhost.com</a>
+</header>
+<h1>Using Nightly with Airbnb</h1>
+<p class="stamp">Last updated 17 September 2026</p>
+
+<div class="note">
+  <p><b>Read this before you connect.</b> Nightly is not an Airbnb product and is not approved by
+  Airbnb. It works by acting inside the Airbnb session you are already signed into, the same way
+  you would if you were typing. That is a real distinction and it is worth understanding before
+  you turn anything on.</p>
+</div>
+
+<h2>What Nightly actually does</h2>
+<p>There is no connection between Nightly and Airbnb's systems. There is no API key, no
+integration, no partner agreement. What there is:</p>
+<ul>
+  <li>A Chrome extension that runs only on <code>airbnb.com/hosting/messages</code> pages, in the
+      browser where <b>you</b> are signed in to Airbnb.</li>
+  <li>It reads what is on that page — the same guest messages you can see — and sends the message
+      text and your house facts to our servers, which write a draft reply.</li>
+  <li>When you approve a draft, the extension types it into the Airbnb message box and clicks send.
+      To Airbnb, that is your account sending a message, because it is.</li>
+</ul>
+<p>Nightly never has your Airbnb password and cannot sign in as you. If you sign out of Airbnb, or
+close Chrome, Nightly can do nothing at all until you are back.</p>
+
+<h2>What Airbnb's terms say</h2>
+<p>Airbnb's Terms of Service restrict automated access to the platform. In plain terms, they
+prohibit using bots, scrapers or other automated means to access, collect data from, or interact
+with the service without Airbnb's written permission. Nightly does not have that permission, and
+we are not going to pretend otherwise.</p>
+<p>How much that matters is a judgement you get to make, not one we get to make for you. Two
+things are worth weighing:</p>
+<ul>
+  <li><b>Nothing happens without you.</b> By default every single message waits for your approval.
+      Nightly is closer to a very good draft in your outbox than to a bot answering on its own —
+      and the parts that can send by themselves are ones you switch on, one at a time, after
+      reading exactly what they say.</li>
+  <li><b>The risk is not zero.</b> Airbnb could change its terms, its interface, or its view of
+      tools like this. In the worst case, a host using automation could face action against their
+      account. We have never seen it happen for approval-based message drafting, but we cannot
+      promise it will not, and anyone who tells you otherwise is guessing.</li>
+</ul>
+<p>If that risk is not one you want, the honest answer is not to use Nightly. We would rather say
+that here than have you find out later.</p>
+
+<h2>What you are agreeing to when you connect</h2>
+<ul>
+  <li>You are the host of the listings involved, or are authorised to act for whoever is.</li>
+  <li>You understand that Nightly acts through your own Airbnb session, and that messages it sends
+      come from your account and are your responsibility.</li>
+  <li>You have read the paragraph above about Airbnb's terms, and you accept the risk of using a
+      tool Airbnb has not approved.</li>
+  <li>You will keep reviewing what Nightly sends. The switches that let it answer on its own are
+      yours to turn off at any moment, and pausing stops everything immediately.</li>
+</ul>
+
+<h2>What Nightly will never do, whatever you switch on</h2>
+<div class="never">
+  <ul>
+    <li>Offer, promise or discuss a refund, discount, fee or price.</li>
+    <li>Cancel a booking, or walk a guest through cancelling.</li>
+    <li>Send a door or gate code to anyone without a confirmed booking.</li>
+    <li>Send a link, a phone number, or suggest paying outside Airbnb.</li>
+    <li>Accept or decline a booking request.</li>
+    <li>Reply to anything about damage, complaints, lawyers or police.</li>
+    <li>State a fact about your place that you did not give it. It says you will confirm instead.</li>
+  </ul>
+  <p>These are not settings. They are checked twice — once against what the message is about, and
+  again by reading the words of the draft itself — so a reply that slips past the first check on a
+  wrong label is still caught by the second.</p>
+</div>
+
+<h2>If Airbnb changes something</h2>
+<p>Airbnb redesigns its hosting pages from time to time. When that happens, Nightly's reading of
+your inbox can break. It is built to fail quietly and visibly rather than to guess: it stops,
+tells you it cannot read the page, and sends nothing. We watch for this and push a fix. Nothing is
+ever sent on a page Nightly does not understand.</p>
+
+<h2>Leaving</h2>
+<p>Remove the extension and Nightly stops immediately. Delete your account from the app and
+everything of yours is erased from our servers, and your subscription is cancelled first. Your
+Airbnb account, your listings, your messages and your reviews are untouched — they were always
+yours, and Nightly only ever borrowed the keyboard.</p>
+
+<footer>
+  <p>Nightly is operated by Swar Housing LLC, Fremont, California.
+     Questions about any of this: <a href="mailto:hello@nightlyhost.com">hello@nightlyhost.com</a>.</p>
+  <p>Not affiliated with, endorsed by, or sponsored by Airbnb, Inc.</p>
+</footer>
+</div>
+</body>
+</html>
